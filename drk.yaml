@@ -1,5 +1,5 @@
 buildFile: Dockerfile.build
 buildImageDirectoryName: null
 buildCommand:
-  default: echo
-  something: echo dude
+  default: echo rake
+  build-static: echo npm build
