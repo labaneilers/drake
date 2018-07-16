@@ -1,0 +1,9 @@
+{
+    "buildFile": "Dockerfile.build",
+    "buildCommand": {
+        "default": "echo",
+        "something": "echo dude"
+    },
+    "buildImageName": null,
+    "buildImageDirectoryName": null
+}
