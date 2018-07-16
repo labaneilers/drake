@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 
@@ -18,7 +20,11 @@ type DrkConfig struct {
 
 // Gets a default config
 func defaultConfig(projectName string) DrkConfig {
-	return DrkConfig{"Dockerfile.build", strings.ToLower(projectName + "build"), "/code", map[string]string{
+	imageName := ""
+	if projectName != "" {
+		imageName = strings.ToLower(projectName + "build")
+	}
+	return DrkConfig{"Dockerfile.build", imageName, "/code", map[string]string{
 		"default": "npm run",
 	}}
 }
@@ -38,4 +44,19 @@ func GetConfig(cwd string) DrkConfig {
 	}
 
 	return config
+}
+
+// WriteConfig writes a default config file template
+func WriteConfig(cwd string) {
+	configPath := path.Join(cwd, "drk.yaml")
+
+	if _, err := os.Stat(configPath); err == nil {
+		fmt.Println("drk.yaml file already exists. Aborting.")
+		os.Exit(1)
+	}
+
+	projectName := path.Base(cwd)
+	data, _ := yaml.Marshal(defaultConfig(projectName))
+	ioutil.WriteFile(configPath, data, os.ModeAppend)
+	fmt.Println("Created drk.yaml with default values.")
 }
