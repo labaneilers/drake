@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/ghodss/yaml"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -37,13 +37,13 @@ func defaultConfig(projectName string) drkConfig {
 }
 
 func getConfig(projectName string) drkConfig {
-	configData, err := ioutil.ReadFile("drk.json")
+	configData, err := ioutil.ReadFile("drk.yaml")
 	if err != nil {
 		return defaultConfig(projectName)
 	}
 
 	config := defaultConfig(projectName)
-	parseErr := json.Unmarshal(configData, &config)
+	parseErr := yaml.Unmarshal(configData, &config)
 	if parseErr != nil {
 		panic(err)
 	}

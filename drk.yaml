@@ -1,0 +1,5 @@
+buildFile: Dockerfile.build
+buildImageDirectoryName: null
+buildCommand:
+  default: echo
+  something: echo dude
