@@ -5,42 +5,78 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strings"
 
-	"github.com/ghodss/yaml"
+	"gopkg.in/yaml.v2"
 )
 
 // DrkConfig is a struct representing a drk.yaml config file
 type DrkConfig struct {
-	BuildFile               string
-	BuildImageName          string
-	BuildImageDirectoryName string
-	BuildCommand            map[string]string
+	DockerFile     string                            `yaml:"dockerFile,omitempty"`
+	DockerImageDir string                            `yaml:"dockerDir,omitempty"`
+	Commands       map[string]*DrkConfigBuildCommand `yaml:"commands"`
+}
+
+// DrkConfigBuildCommand is a struct representing a build command
+type DrkConfigBuildCommand struct {
+	Command        string `yaml:"command,omitempty"`
+	DockerFile     string `yaml:"dockerFile,omitempty"`
+	DockerImageDir string `yaml:"dockerDir,omitempty"`
 }
 
 // Gets a default config
-func defaultConfig(projectName string) DrkConfig {
-	imageName := ""
-	if projectName != "" {
-		imageName = strings.ToLower(projectName + "build")
+func defaultConfig() DrkConfig {
+	defaultCmd := defaultConfigBuildCommand("npm start")
+
+	config := DrkConfig{
+		"Dockerfile.build",
+		"/code",
+		map[string]*DrkConfigBuildCommand{
+			"default": &defaultCmd,
+		},
 	}
-	return DrkConfig{"Dockerfile.build", imageName, "/code", map[string]string{
-		"default": "npm run",
-	}}
+
+	return config
+}
+
+func defaultConfigBuildCommand(command string) DrkConfigBuildCommand {
+	return DrkConfigBuildCommand{command, "", ""}
+}
+
+// GetBuildCommand creates a build command coalesced from the specified command keyword specified by the user and the configuration file
+func (config *DrkConfig) GetBuildCommand(command string) DrkConfigBuildCommand {
+	commandData := *config.Commands["default"]
+	if len(command) > 0 {
+		if val, ok := config.Commands[command]; ok {
+			commandData = *val
+		} else {
+			commandData.Command = commandData.Command + " " + command
+		}
+	}
+
+	return commandData
 }
 
 // GetConfig gets a config based on the drk.yaml for the current directory
 func GetConfig(cwd string) DrkConfig {
-	projectName := path.Base(cwd)
 	configData, err := ioutil.ReadFile("drk.yaml")
 	if err != nil {
-		return defaultConfig(projectName)
+		return defaultConfig()
 	}
 
-	config := defaultConfig(projectName)
+	config := defaultConfig()
 	parseErr := yaml.Unmarshal(configData, &config)
 	if parseErr != nil {
 		panic(err)
+	}
+
+	for _, commandData := range config.Commands {
+		// Coalesce each build command with defaults
+		if commandData.DockerFile == "" {
+			commandData.DockerFile = config.DockerFile
+		}
+		if commandData.DockerImageDir == "" {
+			commandData.DockerImageDir = config.DockerImageDir
+		}
 	}
 
 	return config
@@ -55,8 +91,9 @@ func WriteConfig(cwd string) {
 		os.Exit(1)
 	}
 
-	projectName := path.Base(cwd)
-	data, _ := yaml.Marshal(defaultConfig(projectName))
-	ioutil.WriteFile(configPath, data, os.ModeAppend)
+	config := defaultConfig()
+
+	data, _ := yaml.Marshal(&config)
+	ioutil.WriteFile(configPath, data, os.ModePerm)
 	fmt.Println("Created drk.yaml with default values.")
 }

@@ -18,7 +18,7 @@ type cliArgs struct {
 	New     bool `short:"n" long:"new" description:"Creates a template"`
 	Args    struct {
 		BuildCommand string   `description:"The alias for a build task to run in the docker build container"`
-		Rest         []string `description:"Additional arguments" `
+		Rest         []string `description:"Additional arguments"`
 	} `positional-args:"yes" `
 }
 
@@ -42,16 +42,10 @@ func parseArgs(args []string) cliArgs {
 }
 
 // Given the config and CLI arguments, constructs the command to run inside the Docker build container
-func getTaskCommand(config config.DrkConfig, opts *cliArgs) string {
-	command := config.BuildCommand["default"]
-	if len(opts.Args.BuildCommand) > 0 {
-		if val, ok := config.BuildCommand[opts.Args.BuildCommand]; ok {
-			command = val
-		} else {
-			command = command + " " + opts.Args.BuildCommand
-		}
-	}
-	return command + " " + strings.Join(opts.Args.Rest, " ")
+func getTaskCommand(config config.DrkConfig, opts *cliArgs) config.DrkConfigBuildCommand {
+	commandData := config.GetBuildCommand(opts.Args.BuildCommand)
+	commandData.Command = commandData.Command + " " + strings.Join(opts.Args.Rest, " ")
+	return commandData
 }
 
 func main() {
@@ -71,7 +65,7 @@ func main() {
 
 	taskCommand := getTaskCommand(config, &opts)
 
-	fmt.Println("drk: Running command: " + taskCommand)
+	fmt.Println("drk: Running command: " + taskCommand.Command)
 
-	docker.RunCommandInBuildContainer(cwd, config.BuildImageDirectoryName, config.BuildImageName, taskCommand)
+	docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command)
 }

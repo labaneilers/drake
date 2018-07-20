@@ -1,0 +1,7 @@
+FROM alpine:3.7
+
+# RUN apk update
+# RUN apk add --update bash
+# RUN apk add jpegoptim
+# RUN apk add imagemagick
+# RUN apk add pngquant

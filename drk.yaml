@@ -1,5 +1,8 @@
-BuildCommand:
-  default: npm run
-BuildFile: Dockerfile.build
-BuildImageDirectoryName: /code
-BuildImageName: drkbuild
+dockerFile: Dockerfile.build
+dockerDir: /code
+commands:
+  default: 
+    command: echo default
+  something:
+    command: echo st
+    dockerFile: Dockerfile.alt
