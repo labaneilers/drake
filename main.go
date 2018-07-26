@@ -36,7 +36,7 @@ func parseArgs(args []string) cliArgs {
 		os.Exit(1)
 	}
 
-	if opts.Help {
+	if opts.Help || opts.Args.BuildCommand == "" {
 		// BUG: Colors are not being written to console properly
 		parser.WriteHelp(os.Stdout)
 		os.Exit(0)
