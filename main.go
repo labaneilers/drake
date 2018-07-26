@@ -29,7 +29,7 @@ type cliArgs struct {
 // Parses CLI arguments to a struct
 func parseArgs(args []string) cliArgs {
 	var opts cliArgs
-	parser := flags.NewParser(&opts, flags.IgnoreUnknown|flags.PrintErrors|flags.HelpFlag)
+	parser := flags.NewParser(&opts, flags.IgnoreUnknown)
 	_, err := parser.ParseArgs(args[1:])
 	if err != nil {
 		parser.WriteManPage(os.Stderr)
@@ -37,7 +37,6 @@ func parseArgs(args []string) cliArgs {
 	}
 
 	if opts.Help || opts.Args.BuildCommand == "" {
-		// BUG: Colors are not being written to console properly
 		parser.WriteHelp(os.Stdout)
 		os.Exit(0)
 	}
