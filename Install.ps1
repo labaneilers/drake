@@ -1,5 +1,7 @@
 $ErrorActionPreference = "Stop"
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $installDir = Join-Path $env:ALLUSERSPROFILE "drake"
 if (![System.IO.Directory]::Exists($installDir)) {[void][System.IO.Directory]::CreateDirectory($installDir)}
 $filePath = Join-Path $installDir "drk.exe"
@@ -22,7 +24,6 @@ if ((Test-Path $filePath) -and (Test-Path $versionFilePath)) {
     $diskVersion = Get-Content $versionFilePath
     if ($version -eq $diskVersion) {
         "Already up-to-date"
-        exit
     }
 }
 
