@@ -67,5 +67,10 @@ func main() {
 
 	fmt.Println("drk: Running command: " + taskCommand.Command)
 
-	docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command)
+	if taskCommand.NoDocker {
+		splitCommand := strings.Split(taskCommand.Command, " ")
+		docker.ExecCommand(splitCommand[0], splitCommand[1:]...)
+	} else {
+		docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command)
+	}
 }

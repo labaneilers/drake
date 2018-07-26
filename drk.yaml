@@ -6,3 +6,6 @@ commands:
   something:
     command: echo st
     dockerFile: Dockerfile.alt
+  onhost:
+    command: echo
+    noDocker: true
