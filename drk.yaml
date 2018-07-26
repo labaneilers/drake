@@ -9,3 +9,6 @@ commands:
   onhost:
     command: echo
     noDocker: true
+  drkbuild:
+    command: ./build.sh
+    dockerDir: /go/src/drk
