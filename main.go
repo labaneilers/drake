@@ -11,9 +11,13 @@ import (
 	"github.com/jessevdk/go-flags"
 )
 
+// Version number (input at build time)
+var Version string
+
 // Structure representing the CLI arguments taken by this program
 type cliArgs struct {
-	Verbose bool `short:"v" long:"verbose" description:"Show verbose debug information"`
+	Version bool `short:"v" long:"version" description:"Get version"`
+	Verbose bool `long:"verbose" description:"Show verbose debug information"`
 	Help    bool `short:"h" long:"help" description:"Shows help"`
 	New     bool `short:"n" long:"new" description:"Creates a template"`
 	Args    struct {
@@ -58,6 +62,9 @@ func main() {
 
 	if opts.New {
 		config.WriteConfig(cwd)
+		os.Exit(0)
+	} else if opts.Version {
+		fmt.Println(Version)
 		os.Exit(0)
 	}
 
