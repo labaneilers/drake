@@ -24,6 +24,7 @@ if ((Test-Path $filePath) -and (Test-Path $versionFilePath)) {
     $diskVersion = Get-Content $versionFilePath
     if ($version -eq $diskVersion) {
         "Already up-to-date"
+        exit
     }
 }
 
