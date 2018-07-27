@@ -1,4 +1,4 @@
-. .env
+DRK_VERSION="0.0.$TRAVIS_JOB_ID"
 
 set -e
 
