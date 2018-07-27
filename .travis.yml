@@ -3,6 +3,10 @@ language: go
 go:
   - "1.10.x"
 
+before_install:
+  - chmod +x build.sh
+  - chmod +x release.sh
+
 script:
   - ./build.sh
   
