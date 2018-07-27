@@ -10,4 +10,5 @@ before_install:
 
 script:
   - ./build.sh
+  - ./release.sh
   

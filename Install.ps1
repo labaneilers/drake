@@ -40,7 +40,7 @@ function Install-Drk() {
     $path = [Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::Machine);
     if ($path.ToLower().Contains($installDir.ToLower()) -eq $false) {
       $path = $path + $installDir
-      [System.Environment]::SetEnvironmentVariable('PATH', $path)
+      [System.Environment]::SetEnvironmentVariable('PATH', $path, [System.EnvironmentVariableTarget]::Machine)
     }
 }
 
