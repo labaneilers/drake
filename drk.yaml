@@ -10,10 +10,11 @@ commands:
     command: echo
     noDocker: true
   build:
-    command: ./build.sh
+    command: go get && ./build.sh
     dockerDir: /go/src/drake
     env:
       - TRAVIS_JOB_ID
+      - GOPATH=/go
   release:
     command: ./release.sh
     dockerDir: /go/src/drake
