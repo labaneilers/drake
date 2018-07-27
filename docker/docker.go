@@ -23,7 +23,7 @@ func ExecCommand(path string, args ...string) {
 }
 
 //RunCommandInBuildContainer runs the specified command inside the build image container
-func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, dockerFile string, command string) {
+func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, dockerFile string, command string, env []string) {
 	_, lookErr := exec.LookPath("docker")
 	if lookErr != nil {
 		panic(lookErr)
@@ -34,14 +34,23 @@ func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, doc
 
 	ExecCommand("docker", "build", ".", "-t", dockerImageName, "--file", "./"+dockerFile)
 
-	ExecCommand("docker",
+	args := []string{
 		"run",
 		"-w",
 		dockerImageDirectoryName,
 		"-v",
-		cwd+":"+dockerImageDirectoryName,
-		dockerImageName,
-		"/bin/sh",
-		"-c",
-		command)
+		cwd + ":" + dockerImageDirectoryName}
+
+	for _, envVar := range env {
+		val, _ := os.LookupEnv(envVar)
+		args = append(args, "-e")
+		args = append(args, envVar+"='"+val+"'")
+	}
+
+	args = append(args, dockerImageName)
+	args = append(args, "/bin/sh")
+	args = append(args, "-c")
+	args = append(args, command)
+
+	ExecCommand("docker", args...)
 }

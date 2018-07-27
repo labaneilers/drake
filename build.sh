@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 GOPATH="/go"
-DRK_VER=$(cat ./version)
+majorVersion=$(cat version)
+DRK_VERSION="${majorVersion}${TRAVIS_JOB_ID}"
 go get
 
 platforms=("windows/amd64" "darwin/amd64" "linux/amd64" "linux/arm64")
@@ -16,7 +17,7 @@ do
         output_name+='.exe'
     fi  
 
-    env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X main.Version=$DRK_VER" -o $output_name
+    env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X main.Version=$DRK_VERSION" -o $output_name
 
     if [ $? -ne 0 ]; then
         echo 'An error has occurred! Aborting the script execution...'

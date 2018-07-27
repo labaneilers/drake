@@ -18,10 +18,11 @@ type DrkConfig struct {
 
 // DrkConfigBuildCommand is a struct representing a build command
 type DrkConfigBuildCommand struct {
-	Command        string `yaml:"command,omitempty"`
-	DockerFile     string `yaml:"dockerFile,omitempty"`
-	DockerImageDir string `yaml:"dockerDir,omitempty"`
-	NoDocker       bool   `yaml:"noDocker,omitempty"`
+	Command        string   `yaml:"command,omitempty"`
+	DockerFile     string   `yaml:"dockerFile,omitempty"`
+	DockerImageDir string   `yaml:"dockerDir,omitempty"`
+	NoDocker       bool     `yaml:"noDocker,omitempty"`
+	Env            []string `yaml:"env,omitempty"`
 }
 
 // Gets a default config
@@ -40,7 +41,7 @@ func defaultConfig() DrkConfig {
 }
 
 func defaultConfigBuildCommand(command string) DrkConfigBuildCommand {
-	return DrkConfigBuildCommand{command, "", "", false}
+	return DrkConfigBuildCommand{command, "", "", false, []string{}}
 }
 
 // GetBuildCommand creates a build command coalesced from the specified command keyword specified by the user and the configuration file

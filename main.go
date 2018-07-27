@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"drk/config"
-	"drk/docker"
+	"drake/config"
+	"drake/docker"
 
 	"github.com/jessevdk/go-flags"
 )
@@ -36,6 +36,11 @@ func parseArgs(args []string) cliArgs {
 		os.Exit(1)
 	}
 
+	if opts.Version {
+		fmt.Println(Version)
+		os.Exit(0)
+	}
+
 	if opts.Help || opts.Args.BuildCommand == "" {
 		parser.WriteHelp(os.Stdout)
 		os.Exit(0)
@@ -62,9 +67,6 @@ func main() {
 	if opts.New {
 		config.WriteConfig(cwd)
 		os.Exit(0)
-	} else if opts.Version {
-		fmt.Println(Version)
-		os.Exit(0)
 	}
 
 	config := config.GetConfig(cwd)
@@ -77,6 +79,6 @@ func main() {
 		splitCommand := strings.Split(taskCommand.Command, " ")
 		docker.ExecCommand(splitCommand[0], splitCommand[1:]...)
 	} else {
-		docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command)
+		docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command, taskCommand.Env)
 	}
 }

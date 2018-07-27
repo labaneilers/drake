@@ -1,4 +1,5 @@
-DRK_VERSION="0.0.$TRAVIS_JOB_ID"
+majorVersion=$(cat version)
+DRK_VERSION="${majorVersion}${TRAVIS_JOB_ID}"
 
 set -e
 

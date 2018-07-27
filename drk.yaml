@@ -9,9 +9,11 @@ commands:
   onhost:
     command: echo
     noDocker: true
-  drkbuild:
-    command: ./build.sh
-    dockerDir: /go/src/drk
+  build:
+    command: printenv
+    dockerDir: /go/src/drake
+    env:
+      - TRAVIS_JOB_ID
   release:
     command: ./release.sh
-    dockerDir: /go/src/drk
+    dockerDir: /go/src/drake
