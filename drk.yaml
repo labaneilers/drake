@@ -17,3 +17,6 @@ commands:
   release:
     command: ./release.sh
     dockerDir: /go/src/drake
+    env:
+      - TRAVIS_JOB_ID
+      - GITHUB_ACCESS_TOKEN
