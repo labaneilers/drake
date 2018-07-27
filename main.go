@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"drake/config"
-	"drake/docker"
+	"github.com/labaneilers/drake/config"
+	"github.com/labaneilers/drake/docker"
 
 	"github.com/jessevdk/go-flags"
 )
