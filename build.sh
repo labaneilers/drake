@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-majorVersion=$(cat version)
-DRK_VERSION="${majorVersion}${TRAVIS_JOB_ID}"
+DRK_VERSION=$(git describe --tags)
+echo "Found tag $version"
 
 platforms=("windows/amd64" "darwin/amd64" "linux/amd64" "linux/arm64")
 

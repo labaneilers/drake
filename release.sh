@@ -1,5 +1,8 @@
-majorVersion=$(cat version)
-DRK_VERSION="${majorVersion}${TRAVIS_JOB_ID}"
+if ! DRK_VERSION=$(git describe --exact-match --tags); then
+    echo "no tag, not releasing"
+    exit
+fi
+echo "Found tag $version"
 
 set -e
 
