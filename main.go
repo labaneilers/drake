@@ -16,11 +16,12 @@ var Version string
 
 // Structure representing the CLI arguments taken by this program
 type cliArgs struct {
-	Version bool `short:"v" long:"version" description:"Get version"`
-	Verbose bool `long:"verbose" description:"Show verbose debug information"`
-	Help    bool `short:"h" long:"help" description:"Shows help"`
-	New     bool `short:"n" long:"new" description:"Creates a template"`
-	Args    struct {
+	Version     bool `short:"v" long:"version" description:"Get version"`
+	Verbose     bool `long:"verbose" description:"Show verbose debug information"`
+	Help        bool `short:"h" long:"help" description:"Shows help"`
+	New         bool `short:"n" long:"new" description:"Creates a template"`
+	Interactive bool `short:"i" long:"interactive" description:"Opens an interactive shell to the docker container for the command, but doesn't execute it"`
+	Args        struct {
 		BuildCommand string   `description:"The alias for a build task to run in the docker build container"`
 		Rest         []string `description:"Additional arguments"`
 	} `positional-args:"yes" `
@@ -79,6 +80,12 @@ func main() {
 		splitCommand := strings.Split(taskCommand.Command, " ")
 		docker.ExecCommand(splitCommand[0], splitCommand[1:]...)
 	} else {
-		docker.RunCommandInBuildContainer(cwd, taskCommand.DockerImageDir, taskCommand.DockerFile, taskCommand.Command, taskCommand.Env)
+		docker.RunCommandInBuildContainer(
+			cwd,
+			taskCommand.DockerImageDir,
+			taskCommand.DockerFile,
+			taskCommand.Command,
+			opts.Interactive,
+			taskCommand.Env)
 	}
 }
