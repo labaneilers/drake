@@ -5,6 +5,8 @@ majorVersion=$(cat version)
 DRK_VERSION="${majorVersion}${TRAVIS_JOB_ID}"
 go get
 
+
+
 platforms=("windows/amd64" "darwin/amd64" "linux/amd64" "linux/arm64")
 
 for platform in "${platforms[@]}"

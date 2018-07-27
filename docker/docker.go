@@ -42,9 +42,8 @@ func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, doc
 		cwd + ":" + dockerImageDirectoryName}
 
 	for _, envVar := range env {
-		val, _ := os.LookupEnv(envVar)
 		args = append(args, "-e")
-		args = append(args, envVar+"='"+val+"'")
+		args = append(args, envVar)
 	}
 
 	args = append(args, dockerImageName)
