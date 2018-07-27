@@ -12,3 +12,6 @@ commands:
   drkbuild:
     command: ./build.sh
     dockerDir: /go/src/drk
+  release:
+    command: ./release.sh
+    dockerDir: /go/src/drk

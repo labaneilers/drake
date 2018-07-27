@@ -8,7 +8,7 @@ $filePath = Join-Path $installDir "drk.exe"
 $versionFilePath = "$($filePath).version"
 
 function Get-LatestVersion() {
-    $r = (Invoke-WebRequest "https://github.com/labaneilers/drake/releases").Content
+    $r = (Invoke-WebRequest "https://github.com/labaneilers/drake/releases/latest").Content
     $line = $r.Split("`n") | Where-Object { $_ -match "download.*windows-amd64" }
     $found = $line -match 'download\/(.*)\/windows-amd64'
     if (! $found) {
