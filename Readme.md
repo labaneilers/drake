@@ -60,8 +60,6 @@ $ drk static
 $ drk deploy --credential=12345
 ```
 
-
-
 ## Installation
 Since Drake is a build tool, I made installation possible with a one-liner:
 
@@ -98,4 +96,54 @@ Here's the pattern I think would work well with Drake:
 * Create a `Dockerfile.build` file that can be shared between Drake and Jenkins.
 * Create a `drk.yaml` file with a default command that invokes your build system. This should be as thin a wrapper as possible on top of your build system's configuration.
 * Create a `Jenkinsfile` and define a pipeline that also points to the build system. Similarly to the `drk.yaml` file, this should be as thin a wrapper as possible on top of the build system's commands, and only really contain the plumbing for Jenkins (i.e. passing credentials, etc).
+
+## drk.yaml
+
+Here's the simplest possible `drk.yaml`:
+
+```yaml
+commands:
+  default: 
+    command: rake
+```
+
+Running `drk build` would build an image based on `Dockerfile.build`, mount the current directory in `/code`, and run `rake build` in the container.
+
+Here's a configuration that uses `npm` as the build system, and has a separate Dockerfile just for debug configuration:
+
+```yaml
+commands:
+  default: 
+    command: npm run
+  default: 
+    command: nodemon --legacy-watch --watch ./ --inspect=0.0.0.0:9222 --nolazy ./server.js
+    dockerFile: Dockerfile.debug
+    ports:
+      - "56789:80"
+      - "9222:9222"
+```
+
+Here's a config for an app that uses `cake` to build a dotnet app, and passes AWS credentials to a release script written for `bash`:
+
+```yaml
+commands: 
+  default: 
+    command: cake
+  release:
+    command: ./release.sh
+    env: # Pass through credentials
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+```
+
+Here's a config for a `go` project:
+
+```yaml
+dockerDir: /go/src/drake # The directory inside the container to mount the repo in
+commands:
+  default: 
+    command: go
+    env:
+      - GOPATH=/go # Set GOPATH
+```
 
