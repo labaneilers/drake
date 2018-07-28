@@ -5,9 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/labaneilers/drake/config"
-	"github.com/labaneilers/drake/docker"
-
 	"github.com/jessevdk/go-flags"
 )
 
@@ -51,7 +48,7 @@ func parseArgs(args []string) cliArgs {
 }
 
 // Given the config and CLI arguments, constructs the command to run inside the Docker build container
-func getTaskCommand(config config.DrkConfig, opts *cliArgs) config.DrkConfigBuildCommand {
+func getTaskCommand(config DrkConfig, opts *cliArgs) DrkConfigBuildCommand {
 	commandData := config.GetBuildCommand(opts.Args.BuildCommand)
 	commandData.Command = commandData.Command + " " + strings.Join(opts.Args.Rest, " ")
 	return commandData
@@ -66,11 +63,11 @@ func main() {
 	opts := parseArgs(os.Args)
 
 	if opts.New {
-		config.WriteConfig(cwd)
+		WriteConfig(cwd)
 		os.Exit(0)
 	}
 
-	config := config.GetConfig(cwd)
+	config := GetConfig(cwd)
 
 	taskCommand := getTaskCommand(config, &opts)
 
@@ -78,9 +75,9 @@ func main() {
 
 	if taskCommand.NoDocker {
 		splitCommand := strings.Split(taskCommand.Command, " ")
-		docker.ExecCommand(splitCommand[0], splitCommand[1:]...)
+		ExecCommand(splitCommand[0], splitCommand[1:]...)
 	} else {
-		docker.RunCommandInBuildContainer(
+		RunCommandInBuildContainer(
 			cwd,
 			taskCommand.DockerImageDir,
 			taskCommand.DockerFile,

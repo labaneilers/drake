@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DRK_VERSION=$(git describe --tags)
-echo "Found tag $version"
+echo "Found tag $DRK_VERSION"
 
 platforms=("windows/amd64" "darwin/amd64" "linux/amd64" "linux/arm64")
 

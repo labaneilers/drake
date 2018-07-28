@@ -1,4 +1,4 @@
-package docker
+package main
 
 import (
 	"fmt"
@@ -15,6 +15,7 @@ func ExecCommand(path string, args ...string) {
 	fmt.Println(cmd.Path + " " + strings.Join(cmd.Args, " "))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 	err := cmd.Run()
 	if err != nil {
 		panic(err)
@@ -23,7 +24,7 @@ func ExecCommand(path string, args ...string) {
 }
 
 //RunCommandInBuildContainer runs the specified command inside the build image container
-func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, dockerFile string, command string, env []string) {
+func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, dockerFile string, command string, interactive bool, env []string) {
 	_, lookErr := exec.LookPath("docker")
 	if lookErr != nil {
 		panic(lookErr)
@@ -46,10 +47,17 @@ func RunCommandInBuildContainer(cwd string, dockerImageDirectoryName string, doc
 		args = append(args, envVar)
 	}
 
+	if interactive {
+		args = append(args, "-it")
+	}
+
 	args = append(args, dockerImageName)
 	args = append(args, "/bin/sh")
-	args = append(args, "-c")
-	args = append(args, command)
+
+	if !interactive {
+		args = append(args, "-c")
+		args = append(args, command)
+	}
 
 	ExecCommand("docker", args...)
 }
