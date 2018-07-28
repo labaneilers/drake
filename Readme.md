@@ -2,10 +2,19 @@
 
 <img width="400%" align="center" src="drake.jpg">
 
-Drake is a cross-platform command-line build tool that executes build commands in a docker container, so that you can encapsulate all your build dependencies. Regardless of your development platform, your build commands will run in a single linux environment. 
+Drake is a cross-platform command-line build tool that executes build commands in a docker container, so that you can encapsulate all your build dependencies. Regardless of what platform you're using for development, your build commands will run in a single linux environment- the same environment you use in your CI pipeline.
+
+If you like using Docker in Jenkins pipelines, think of Drake as a develoment-time CLI version of  `docker.image("someimage") { some build commands }` in your Jenkinsfile.
 
 # How does it work?
-Drake builds a Docker image from your specified build-time Dockerfile, launches the container with your repository root mounted in the container's file system, and passes the shell command you specify via docker run. You use a simple yaml configuration file to map host commands to container commands.
+Drake builds a Docker image from your specified build-time Dockerfile, launches the container with your repository root mounted in the container's file system, and passes the shell command and environment variables you specify via docker run. You use a simple yaml configuration file to map host commands to container commands.
+
+At its core, Drake is just a simpler interface for issuing the following docker commands:
+
+```bash
+docker build . -t foobarbuildimage --file ./Dockerfile.build
+docker run -w /code -e SOME_ENV -v /repos/foobar:/code foobarbuildimage /bin/sh -c ./some-build-command.sh
+```
 
 # Example
 Imagine I'm building a dotnet core application, and I'm using node/gulp to build static files. I also have a shell script to deploy.
@@ -79,6 +88,7 @@ I created Drake for a few reasons:
 * My work offers developers a lot of autonomy, so team members inevitably end up choose different development platforms from one another. Teams also have the freedom to choose the right app stack for the problems they're working on. This is awesome, but it makes it a pain to write build/deployment scripts that work for everyone.
 * Using Docker build containers with Jenkins pipelines is *amazing*. Being able to define your dependencies in a Jenkinsfile and keep it in source control solves so many problems. Unfortunately, there's no great story for using the Jenkinsfile pipeline steps in the Jenkinsfile in a developer environment- certainly not cross-platform.
 * Many build systems run cross-platform, but they require writing plugins to integrate any new task (to preserve platform independence). This is a lot more complicated than simply using the flexibility of the unix shell.
+* The docker and docker-compose tooling are super powerful, and can already do all this, but the ergonomics aren't great for this use case.
 
 ## Patterns
 
