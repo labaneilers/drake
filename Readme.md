@@ -5,12 +5,12 @@
 Drake is a cross-platform command-line build tool that executes build commands in a docker container, so that you can encapsulate all your build dependencies. Regardless of your development platform, your build commands will run in a single linux environment. 
 
 # How does it work?
-Drake build a Docker image from your specified build-time Dockerfile, launches the container with your repository root mounted in the container's file system, and passes the shell command you specify via docker run. You use a simple yaml configuration file to map host commands to container commands.
+Drake builds a Docker image from your specified build-time Dockerfile, launches the container with your repository root mounted in the container's file system, and passes the shell command you specify via docker run. You use a simple yaml configuration file to map host commands to container commands.
 
 # Example
-Imagine I'm building a dotnet core application, and I'm using node/gulp to build static files. I also have a shell script to deploy:
+Imagine I'm building a dotnet core application, and I'm using node/gulp to build static files. I also have a shell script to deploy.
 
-First, create a configuration file: drk.yaml:
+First, create a configuration file: `drk.yaml`:
 
 ```yaml
 dockerFile: Dockerfile.build
@@ -24,7 +24,7 @@ commands:
     command: gulp
 ```
 
-and a build file:
+Then, create a `Dockerfile.build` that contains your build dependencies:
 
 ```dockerfile
 FROM microsoft/dotnet:sdk
@@ -42,13 +42,13 @@ Then, you can use these same build commands from Windows, Mac, or Linux:
 ```bash
 # Runs "dotnet build" inside the docker container
 # The default command is "dotnet", and any command that isn't specifically defined gets appended to "dotnet".
-drk build
+$ drk build
 
 # Runs "gulp"
-drk static
+$ drk static
 
 # Runs ./deploy.sh --credential=12345
-drk deploy --credential=12345
+$ drk deploy --credential=12345
 ```
 
 ## Installation
