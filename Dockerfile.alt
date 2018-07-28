@@ -1,7 +1,11 @@
-FROM alpine:3.7
+FROM microsoft/dotnet:sdk
 
-# RUN apk update
-# RUN apk add --update bash
-# RUN apk add jpegoptim
-# RUN apk add imagemagick
-# RUN apk add pngquant
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
+# Install gulp
+RUN npm install gulp -g
+
+
+

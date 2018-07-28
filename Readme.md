@@ -1,6 +1,6 @@
 # Drake : Docker make
 
-<img align="right" src="drake.jpg">
+<img width="400%" align="center" src="drake.jpg">
 
 Drake is a cross-platform command-line build tool that executes build commands in a docker container, so that you can encapsulate all your build dependencies. Regardless of your development platform, your build commands will run in a single linux environment. 
 
