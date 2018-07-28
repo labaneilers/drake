@@ -6,6 +6,10 @@ commands:
   something:
     command: echo st
     dockerFile: Dockerfile.alt
+  withports:
+    command: echo 
+    ports:
+      - "80:5999"
   onhost:
     command: echo
     noDocker: true

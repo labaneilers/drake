@@ -23,6 +23,7 @@ type DrkConfigBuildCommand struct {
 	DockerImageDir string   `yaml:"dockerDir,omitempty"`
 	NoDocker       bool     `yaml:"noDocker,omitempty"`
 	Env            []string `yaml:"env,omitempty"`
+	Ports          []string `yaml:"ports,omitempty"`
 }
 
 // Gets a default config
@@ -41,7 +42,7 @@ func defaultConfig() DrkConfig {
 }
 
 func defaultConfigBuildCommand(command string) DrkConfigBuildCommand {
-	return DrkConfigBuildCommand{command, "", "", false, []string{}}
+	return DrkConfigBuildCommand{command, "", "", false, []string{}, []string{}}
 }
 
 // GetBuildCommand creates a build command coalesced from the specified command keyword specified by the user and the configuration file

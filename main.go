@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -71,7 +72,7 @@ func main() {
 
 	taskCommand := getTaskCommand(config, &opts)
 
-	fmt.Println("drk: Running command: " + taskCommand.Command)
+	color.Magenta("Drake command: " + taskCommand.Command)
 
 	if taskCommand.NoDocker {
 		splitCommand := strings.Split(taskCommand.Command, " ")
@@ -79,10 +80,7 @@ func main() {
 	} else {
 		RunCommandInBuildContainer(
 			cwd,
-			taskCommand.DockerImageDir,
-			taskCommand.DockerFile,
-			taskCommand.Command,
-			opts.Interactive,
-			taskCommand.Env)
+			taskCommand,
+			opts.Interactive)
 	}
 }
