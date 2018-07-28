@@ -21,6 +21,11 @@ function Install-Drk() {
     $version = Get-LatestVersion
     "Latest version: $version"
 
+    if (! $version) {
+        "ERROR: Couldn't get most recent version of drk"
+        return
+    }
+
     if ((Test-Path $filePath) -and (Test-Path $versionFilePath)) {
         $diskVersion = Get-Content $versionFilePath
         if ($version -eq $diskVersion) {
