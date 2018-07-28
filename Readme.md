@@ -78,8 +78,7 @@ I created Drake for a few reasons:
 
 * My work offers developers a lot of autonomy, so team members inevitably end up choose different development platforms from one another. Teams also have the freedom to choose the right app stack for the problems they're working on. This is awesome, but it makes it a pain to write build/deployment scripts that work for everyone.
 * Using Docker build containers with Jenkins pipelines is *amazing*. Being able to define your dependencies in a Jenkinsfile and keep it in source control solves so many problems. Unfortunately, there's no great story for using the Jenkinsfile pipeline steps in the Jenkinsfile in a developer environment- certainly not cross-platform.
-* Many build systems run cross-platform, but this falls apart as soon as you need to call shell commands.
-* Many build systems (especially in the node.js ecosystem) require writing plugins to integrate new tasks. This is a lot more complicated than simply using the flexibility of the unix shell.
+* Many build systems run cross-platform, but they require writing plugins to integrate any new task (to preserve platform independence). This is a lot more complicated than simply using the flexibility of the unix shell.
 
 ## Patterns
 
